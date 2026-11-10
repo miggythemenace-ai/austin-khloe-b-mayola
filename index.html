@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tugtog Pilipinas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;800&family=Nunito:wght@400;700;800&display=swap">
+<style>
+:root{--navy:#0f2a5f;--sun:#f4b223;--cream:#fcf4de;--disp:Fraunces,Georgia,serif;--body:Nunito,system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);font:400 16px/1.5 var(--body)}
+h1{margin:0;font-family:var(--disp);font-size:clamp(2rem,9vw,2.6rem);font-weight:800;letter-spacing:.02em;line-height:1.15;text-wrap:balance;color:var(--sun)}
+p{margin:0}
+:focus-visible{outline:3px solid var(--sun);outline-offset:3px}
+
+#splash{position:fixed;inset:0;z-index:50;overflow:hidden;touch-action:none;cursor:pointer}
+.blank{position:absolute;inset:0;background:var(--cream)}
+#splash.drain .blank{display:none}
+.drop{position:absolute;left:calc(100% + 40px);top:var(--t);width:9px;height:9px;border-radius:50%;background:currentColor;opacity:0;animation:spray 1s ease-out infinite paused}
+#splash.flood .drop,#splash.drain .drop{animation-play-state:running}
+@keyframes spray{0%{transform:translate(0,0) scale(.4);opacity:0}20%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.6);opacity:0}}
+.water{position:absolute;inset:0;transform:translateX(calc(-100% - 90px))}
+.w0{background:#8fb8e8;color:#8fb8e8}
+.w1{background:#2a5fb8;color:#2a5fb8}
+.w2{background:var(--navy);color:var(--navy)}
+.crest{position:absolute;top:0;left:calc(100% - 1px);width:90px;height:200%;fill:currentColor;animation:ride 1.7s linear infinite}
+.w1 .crest{animation-duration:2.5s;animation-direction:reverse}
+.w0 .crest{animation-duration:1.3s}
+@keyframes ride{to{transform:translateY(-25%)}}
+#splash.flood .water{transform:none;transition:transform 2s cubic-bezier(.2,.7,.25,1)}
+#splash.flood .w1{transition-delay:.15s}
+#splash.flood .w2{transition-delay:.3s}
+#splash.drain .water{transition:transform 1.6s cubic-bezier(.55,0,.45,1)}
+#splash.drain .w1{transition-delay:.15s}
+#splash.drain .w0{transition-delay:.3s}
+.splash-c{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center;opacity:0;transform:scale(.92);transition:opacity .7s,transform .7s;pointer-events:none}
+#splash.logo .splash-c{opacity:1;transform:none}
+.splash-c svg{width:128px;height:128px}
+.splash-c p{color:#dfe5f3;font-size:.9rem}
+@media (prefers-reduced-motion:reduce){#splash *{transition-duration:.01s!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div id="splash" role="button" tabindex="0" aria-label="Tugtog Pilipinas. Tap to continue">
+<div class="blank"></div>
+<div class="water w0"><svg class="crest" viewBox="0 0 60 2400" preserveAspectRatio="none"><path d="M0 0H30Q60 150 30 300T30 600T30 900T30 1200T30 1500T30 1800T30 2100T30 2400H0Z"/></svg></div>
+<div class="water w1"><svg class="crest" viewBox="0 0 60 2400" preserveAspectRatio="none"><path d="M0 0H30Q60 150 30 300T30 600T30 900T30 1200T30 1500T30 1800T30 2100T30 2400H0Z"/></svg></div>
+<div class="water w2"><svg class="crest" viewBox="0 0 60 2400" preserveAspectRatio="none"><path d="M0 0H30Q60 150 30 300T30 600T30 900T30 1200T30 1500T30 1800T30 2100T30 2400H0Z"/></svg></div>
+<div class="splash-c" id="sc"></div>
+</div>
+
+<script>
+const logo=()=>{let r='';for(let i=0;i<8;i++)r+=`<line x1="50" y1="6" x2="50" y2="19" transform="rotate(${i*45} 50 50)"/>`;
+ return `<svg viewBox="0 0 100 100" role="img" aria-label="Tugtog Pilipinas logo"><g style="stroke:var(--sun);stroke-width:5;stroke-linecap:round">${r}</g><circle cx="50" cy="50" r="27" style="fill:var(--sun)"/><g style="fill:var(--navy);stroke:var(--navy);stroke-width:3.5;stroke-linecap:round"><ellipse cx="44" cy="60" rx="7" ry="5" stroke="none"/><path d="M50 59V38q9 2 9 12" fill="none"/></g></svg>`};
+
+// SPLASH: wave rises, floods, logo shows; tap or wait to drain
+(function(){const sp=document.getElementById('splash'),f=matchMedia('(prefers-reduced-motion:reduce)').matches?.3:1;let stage=0;
+ document.getElementById('sc').innerHTML=logo()+'<h1>TUGTOG<br>PILIPINAS</h1><p>Tap to continue</p>';
+ const drain=()=>{if(stage!==2)return;stage=3;sp.className='drain';setTimeout(()=>{sp.hidden=true},2100*f)};
+ sp.addEventListener('click',drain);
+ sp.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();drain()}});
+ ['w0','w1','w2'].forEach(c=>{let h='';for(let i=0;i<10;i++)h+=`<i class="drop" style="--t:${(Math.random()*96).toFixed(0)}%;--dx:${(30+Math.random()*80).toFixed(0)}px;--dy:${(-70+Math.random()*60).toFixed(0)}px;animation-delay:${(Math.random()*1).toFixed(2)}s"></i>`;sp.querySelector('.'+c).insertAdjacentHTML('beforeend',h)});
+ setTimeout(()=>{sp.className='flood';stage=1},600*f);
+ setTimeout(()=>{sp.className='flood logo';stage=2},2700*f);
+ setTimeout(drain,5800*f)})();
+</script>
+</body>
+</html>
