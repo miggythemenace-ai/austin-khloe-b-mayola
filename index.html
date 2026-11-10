@@ -28,12 +28,12 @@ p{margin:0}
 .w1 .crest{animation-duration:2.5s;animation-direction:reverse}
 .w0 .crest{animation-duration:1.3s}
 @keyframes ride{to{transform:translateY(-25%)}}
-#splash.flood .water{transform:none;transition:transform 2s cubic-bezier(.2,.7,.25,1)}
-#splash.flood .w1{transition-delay:.15s}
-#splash.flood .w2{transition-delay:.3s}
-#splash.drain .water{transition:transform 1.6s cubic-bezier(.55,0,.45,1)}
-#splash.drain .w1{transition-delay:.15s}
-#splash.drain .w0{transition-delay:.3s}
+#splash.flood .water{transform:none;transition:transform 1.3s cubic-bezier(.2,.7,.25,1)}
+#splash.flood .w1{transition-delay:.1s}
+#splash.flood .w2{transition-delay:.2s}
+#splash.drain .water{transition:transform 1.3s cubic-bezier(.55,0,.45,1)}
+#splash.drain .w1{transition-delay:.1s}
+#splash.drain .w0{transition-delay:.2s}
 .splash-c{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center;opacity:0;transform:scale(.92);transition:opacity .7s,transform .7s;pointer-events:none}
 #splash.logo .splash-c{opacity:1;transform:none}
 .splash-c svg{width:128px;height:128px}
@@ -55,15 +55,15 @@ p{margin:0}
 const logo=()=>{let r='';for(let i=0;i<8;i++)r+=`<line x1="50" y1="6" x2="50" y2="19" transform="rotate(${i*45} 50 50)"/>`;
  return `<svg viewBox="0 0 100 100" role="img" aria-label="Tugtog Pilipinas logo"><g style="stroke:var(--sun);stroke-width:5;stroke-linecap:round">${r}</g><circle cx="50" cy="50" r="27" style="fill:var(--sun)"/><g style="fill:var(--navy);stroke:var(--navy);stroke-width:3.5;stroke-linecap:round"><ellipse cx="44" cy="60" rx="7" ry="5" stroke="none"/><path d="M50 59V38q9 2 9 12" fill="none"/></g></svg>`};
 
-// SPLASH: wave rises and floods (~2.9s), holds fully in for 5s, then drains on its own. Not clickable.
-(function(){const sp=document.getElementById('splash'),f=matchMedia('(prefers-reduced-motion:reduce)').matches?.3:1,HOLD=5000;
+// SPLASH: 5s total. Waves enter (1.5s), stay (2s), exit (1.5s). Not clickable.
+(function(){const sp=document.getElementById('splash'),ENTER=1500,HOLD=2000,EXIT=1500;
  document.getElementById('sc').innerHTML=logo()+'<h1>TUGTOG<br>PILIPINAS</h1>';
- const drain=()=>{sp.className='drain';setTimeout(()=>{sp.hidden=true},2100*f)};
+ const drain=()=>{sp.className='drain';setTimeout(()=>{sp.hidden=true},EXIT+100)};
  ['w0','w1','w2'].forEach(c=>{let h='';for(let i=0;i<10;i++)h+=`<i class="drop" style="--t:${(Math.random()*96).toFixed(0)}%;--dx:${(30+Math.random()*80).toFixed(0)}px;--dy:${(-70+Math.random()*60).toFixed(0)}px;animation-delay:${(Math.random()*1).toFixed(2)}s"></i>`;sp.querySelector('.'+c).insertAdjacentHTML('beforeend',h)});
- setTimeout(()=>{sp.className='flood'},600*f);
- setTimeout(()=>{sp.className='flood logo'},2700*f);
- // entry finishes at ~2900ms (600 start + 0.3s delay + 2s slide); hold 5s from there
- setTimeout(drain,2900*f+HOLD)})();
+ setTimeout(()=>{sp.className='flood'},30);
+ setTimeout(()=>{sp.className='flood logo'},800);
+ // enter ends ~1530ms (1.3s slide + 0.2s stagger); stay HOLD; exit takes EXIT
+ setTimeout(drain,30+ENTER+HOLD)})();
 </script>
 </body>
 </html>
