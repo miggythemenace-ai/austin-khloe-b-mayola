@@ -8,13 +8,14 @@
 <style>
 :root{--navy:#0f2a5f;--sun:#f4b223;--cream:#fcf4de;--disp:Fraunces,Georgia,serif;--body:Nunito,system-ui,sans-serif}
 *{box-sizing:border-box}
-body{margin:0;background:var(--cream);font:400 16px/1.5 var(--body)}
+html,body{background:transparent}
+body{margin:0;font:400 16px/1.5 var(--body)}
 h1{margin:0;font-family:var(--disp);font-size:clamp(2rem,9vw,2.6rem);font-weight:800;letter-spacing:.02em;line-height:1.15;text-wrap:balance;color:var(--sun)}
 p{margin:0}
 :focus-visible{outline:3px solid var(--sun);outline-offset:3px}
 
 #splash{position:fixed;inset:0;z-index:50;overflow:hidden;touch-action:none;cursor:pointer}
-.blank{position:absolute;inset:0;background:var(--cream)}
+.blank{position:absolute;inset:0;background:transparent}
 #splash.drain .blank{display:none}
 .drop{position:absolute;left:calc(100% + 40px);top:var(--t);width:9px;height:9px;border-radius:50%;background:currentColor;opacity:0;animation:spray 1s ease-out infinite paused}
 #splash.flood .drop,#splash.drain .drop{animation-play-state:running}
