@@ -63,7 +63,7 @@ const logo=()=>{const P=(r,t)=>(50+r*Math.sin(t)).toFixed(1)+' '+(50-r*Math.cos(
 // SPLASH: 5s total. Waves enter (1.5s), stay (2s), exit (1.5s). Not clickable.
 (function(){const sp=document.getElementById('splash'),ENTER=1500,HOLD=2000,EXIT=1500;
  document.getElementById('sc').innerHTML=logo()+'<h1>TUGTOG<br>PILIPINAS</h1><p>Discover the Music.<br>Explore the Culture.</p>';
- const drain=()=>{sp.className='drain';setTimeout(()=>{sp.hidden=true},EXIT)};
+ const drain=()=>{sp.className='drain';setTimeout(()=>{sp.hidden=true;try{window.AppInventor.setWebViewString('splash-done')}catch(e){}},EXIT)};
  ['w0','w1','w2'].forEach(c=>{let h='';for(let i=0;i<10;i++)h+=`<i class="drop" style="--t:${(Math.random()*96).toFixed(0)}%;--dx:${(30+Math.random()*80).toFixed(0)}px;--dy:${(-70+Math.random()*60).toFixed(0)}px;animation-delay:${(Math.random()*1).toFixed(2)}s"></i>`;sp.querySelector('.'+c).insertAdjacentHTML('beforeend',h)});
  setTimeout(()=>{sp.className='flood'},30);
  setTimeout(()=>{sp.className='flood logo'},800);
