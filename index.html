@@ -4,16 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Tugtog Pilipinas</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;800&family=Nunito:wght@400;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;700;800&display=swap">
 <style>
-:root{--navy:#0f2a5f;--sun:#f4b223;--cream:#fcf4de;--disp:Fraunces,Georgia,serif;--body:Nunito,system-ui,sans-serif}
+/* Original look kept: navy wave splash, cream login. Theme taken from the poster: sun-and-play emblem, bold serif title, tagline. */
+:root{--navy:#0f2a5f;--sun:#f4b223;--cream:#fcf4de;--paper:#fffaf0;--ink:#1c2233;--muted:#5d6475;--earth:#9a5b2a;--line:#e6d9b8;--bad:#a3261f;--red:#ce1126;--blue2:#2f6bff;--disp:"Playfair Display",Georgia,serif;--body:Nunito,system-ui,sans-serif}
 *{box-sizing:border-box}
 html,body{background:transparent}
 body{margin:0;font:400 16px/1.5 var(--body)}
-h1{margin:0;font-family:var(--disp);font-size:clamp(2rem,9vw,2.6rem);font-weight:800;letter-spacing:.02em;line-height:1.15;text-wrap:balance;color:var(--sun)}
+[hidden]{display:none!important}
+h1{margin:0;font-family:var(--disp);font-size:clamp(2rem,9vw,2.6rem);font-weight:900;letter-spacing:.02em;line-height:1.1;text-wrap:balance;color:#fff}
 p{margin:0}
 :focus-visible{outline:3px solid var(--sun);outline-offset:3px}
-
 #splash{position:fixed;inset:0;z-index:50;overflow:hidden;touch-action:none}
 .blank{position:absolute;inset:0;background:transparent}
 #splash.drain .blank{display:none}
@@ -39,10 +40,34 @@ p{margin:0}
 .splash-c svg{width:128px;height:128px}
 .splash-c p{color:#dfe5f3;font-size:.9rem}
 @media (prefers-reduced-motion:reduce){#splash *{transition-duration:.01s!important;animation:none!important}}
+
+.splash-c p{font:700 1.05rem/1.35 var(--disp);color:#fff}
+/* ===== login ===== */
+#auth{min-height:100vh;background:var(--cream);color:var(--ink);display:grid;grid-template-columns:minmax(0,420px);justify-content:center;align-content:start;gap:14px;padding-block:6vh 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+#auth h1{font-size:1.9rem;color:var(--navy)}
+#auth :focus-visible{outline-color:var(--earth)}
+.emb svg{width:96px;height:96px}
+.sub{color:var(--muted)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;border-radius:999px;background:var(--line)}
+.tabs button{min-height:44px;border:0;border-radius:999px;background:transparent;color:var(--navy);font:800 1rem var(--body);cursor:pointer}
+.tabs .on{background:var(--navy);color:var(--cream)}
+form{display:grid;gap:8px}
+label{font:800 .75rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--earth)}
+.pw{position:relative}
+input{width:100%;min-height:48px;padding:10px 16px;border:2px solid var(--line);border-radius:16px;background:var(--paper);color:var(--ink);font:400 1rem var(--body)}
+input:focus-visible{border-color:var(--navy)}
+.pw input{padding-right:84px}
+.eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);min-height:36px;padding:0 12px;border:0;border-radius:999px;background:transparent;color:var(--navy);font:800 .85rem var(--body);cursor:pointer}
+.hint,.note{font-size:.85rem;color:var(--muted)}
+.err{min-height:1.5em;color:var(--bad);font-weight:700}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;padding:12px 22px;border:0;border-radius:999px;background:var(--sun);color:var(--navy);font:800 1rem var(--body);text-decoration:none;cursor:pointer}
+.btn:disabled{opacity:.6;cursor:wait}
+.ghost{background:transparent;border:2px solid var(--navy);color:var(--navy)}
+.ok{display:grid;gap:14px}
 </style>
 </head>
 <body>
-
+<div id="auth" hidden></div>
 <div id="splash" role="img" aria-label="Tugtog Pilipinas">
 <div class="blank"></div>
 <div class="water w0"><svg class="crest" viewBox="0 0 60 2400" preserveAspectRatio="none"><path d="M0 0H30Q60 150 30 300T30 600T30 900T30 1200T30 1500T30 1800T30 2100T30 2400H0Z"/></svg></div>
@@ -50,20 +75,78 @@ p{margin:0}
 <div class="water w2"><svg class="crest" viewBox="0 0 60 2400" preserveAspectRatio="none"><path d="M0 0H30Q60 150 30 300T30 600T30 900T30 1200T30 1500T30 1800T30 2100T30 2400H0Z"/></svg></div>
 <div class="splash-c" id="sc"></div>
 </div>
-
 <script>
-const logo=()=>{let r='';for(let i=0;i<8;i++)r+=`<line x1="50" y1="6" x2="50" y2="19" transform="rotate(${i*45} 50 50)"/>`;
- return `<svg viewBox="0 0 100 100" role="img" aria-label="Tugtog Pilipinas logo"><g style="stroke:var(--sun);stroke-width:5;stroke-linecap:round">${r}</g><circle cx="50" cy="50" r="27" style="fill:var(--sun)"/><g style="fill:var(--navy);stroke:var(--navy);stroke-width:3.5;stroke-linecap:round"><ellipse cx="44" cy="60" rx="7" ry="5" stroke="none"/><path d="M50 59V38q9 2 9 12" fill="none"/></g></svg>`};
+// Sun emblem: 8 groups of rays (red left, blue right) around a play button.
+const logo=()=>{const P=(r,t)=>(50+r*Math.sin(t)).toFixed(1)+' '+(50-r*Math.cos(t)).toFixed(1);
+ const ray=(a,len,w)=>{const t=a*Math.PI/180;return `M${P(29,t-w)}L${P(len,t)}L${P(29,t+w)}Z`};
+ let red='',blue='';for(let i=0;i<8;i++){const a=i*45,d=ray(a,48,.1)+ray(a-12,41,.065)+ray(a+12,41,.065);if(a>=225||a===0)red+=d;else blue+=d}
+ return `<svg viewBox="0 0 100 100" role="img" aria-label="Tugtog Pilipinas logo"><path d="${red}" style="fill:var(--red)"/><path d="${blue}" style="fill:var(--blue2)"/><circle cx="50" cy="50" r="27" style="fill:#0b1346;stroke:var(--sun);stroke-width:2.5"/><path d="M43 37.5V62.5L65 50Z" style="fill:var(--cream);stroke:var(--cream);stroke-width:4;stroke-linejoin:round"/></svg>`};
+// ===== LOGIC START =====
 
+const validUser=u=>/^[A-Za-z0-9_]{3,20}$/.test(u);
+const validPass=p=>typeof p==='string'&&p.length>=6;
+const favKey=u=>'tugtog_favs_v1_'+u.toLowerCase();
+const fbh=t=>{let h=5381;for(const c of t)h=(h*33^c.charCodeAt(0))>>>0;return'fb:'+h.toString(16)};
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+const hashPw=async(p,s,fb)=>{if(!fb)try{return hex(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s+p)))}catch(e){}return fbh(s+p)};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function checkSignup(u,p,p2,users){
+ if(!validUser(u))return'Username needs 3 to 20 letters, numbers or _.';
+ if(!validPass(p))return'Password needs at least 6 characters.';
+ if(p!==p2)return'Passwords do not match.';
+ if(users[u.toLowerCase()])return'That username is taken. Try logging in.';
+ return''}
+// ===== LOGIC END =====
+
+// ===== SETTINGS =====
+const NEXT='app.html'; // page the Continue button opens after login (the main app)
+const USERS='tugtog_users_v1',SES='tugtog_session_v1'; // same keys as the main app
+
+// ===== STORAGE =====
+const mem={},st={get:k=>{try{const v=localStorage.getItem(k);return v===null?(mem[k]||null):v}catch(e){return mem[k]||null}},set:(k,v)=>{mem[k]=v;try{localStorage.setItem(k,v)}catch(e){}}};
+const getUsers=()=>{try{const u=JSON.parse(st.get(USERS)||'{}');return u&&typeof u==='object'?u:{}}catch(e){return{}}};
+const rnd=()=>{try{return hex(crypto.getRandomValues(new Uint8Array(8)))}catch(e){return Math.random().toString(16).slice(2)}};
+function favsOf(u){try{const a=JSON.parse(st.get(favKey(u))||'[]');return Array.isArray(a)?a:[]}catch(e){return[]}}
+function enter(name){st.set(SES,name);try{window.AppInventor.setWebViewString(JSON.stringify({user:name,favs:favsOf(name)}))}catch(e){}}
+
+
+// ===== VIEW =====
+let mode='in',msg='',draft='',user=st.get(SES)||'';
+const m=document.getElementById('auth');
+const pw=(id,label,auto)=>`<label for="${id}">${label}</label><div class="pw"><input id="${id}" name="${id}" type="password" autocomplete="${auto}"><button type="button" class="eye" data-eye="${id}" aria-label="Show or hide ${label.toLowerCase()}">Show</button></div>`;
+function view(){
+ if(user&&getUsers()[user.toLowerCase()])return `<div class="emb">${logo()}</div><section class="ok"><h1>Welcome, ${esc(user)}</h1><p class="sub">You are logged in. Your favorite music is saved to your account.</p><a class="btn" href="${NEXT}">Continue</a><button class="btn ghost" data-out>Log out</button></section>`;
+ const up=mode==='up';
+ return `<div class="emb">${logo()}</div><h1>${up?'Create your account':'Welcome back'}</h1><p class="sub">${up?'Sign up to save your favorite music.':'Log in to see your saved music.'}</p>
+<div class="tabs"><button type="button" class="${up?'':'on'}" aria-pressed="${!up}" data-mode="in">Log in</button><button type="button" class="${up?'on':''}" aria-pressed="${up}" data-mode="up">Sign up</button></div>
+<form id="af" novalidate><label for="u">Username</label><input id="u" name="u" value="${esc(draft)}" maxlength="20" autocomplete="username" autocapitalize="none" spellcheck="false">${up?'<p class="hint">3 to 20 letters, numbers or _</p>':''}${pw('p','Password',up?'new-password':'current-password')}${up?pw('p2','Confirm password','new-password'):''}<p class="err" id="err" role="alert">${esc(msg)}</p><button class="btn" id="go" type="submit">${up?'Create account':'Log in'}</button></form><p class="note">Accounts are saved on this device only.</p>`}
+function render(){m.innerHTML=view();const f=document.getElementById('u');if(f&&!draft)f.focus({preventScroll:true})}
+const setErr=t=>{msg=t;document.getElementById('err').textContent=t};
+
+// ===== EVENTS =====
+m.addEventListener('click',e=>{const b=e.target.closest('[data-mode],[data-eye],[data-out]');if(!b)return;
+ if(b.dataset.mode){const f=document.getElementById('u');draft=f?f.value:'';mode=b.dataset.mode;msg='';render()}
+ else if(b.dataset.eye){const i=document.getElementById(b.dataset.eye),s=i.type==='password';i.type=s?'text':'password';b.textContent=s?'Hide':'Show'}
+ else{user='';st.set(SES,'');try{window.AppInventor.setWebViewString('')}catch(x){}mode='in';msg='';draft='';render()}});
+m.addEventListener('submit',async e=>{e.preventDefault();const f=e.target,u=f.u.value.trim(),p=f.p.value,users=getUsers(),k=u.toLowerCase(),go=document.getElementById('go');draft=u;go.disabled=true;
+ try{
+  if(mode==='up'){const bad=checkSignup(u,p,f.p2.value,users);if(bad)return setErr(bad);
+   const s=rnd();users[k]={name:u,salt:s,hash:await hashPw(p,s)};st.set(USERS,JSON.stringify(users));user=u}
+  else{const a=users[k];if(!a||a.hash!==await hashPw(p,a.salt,a.hash.indexOf('fb:')===0))return setErr('Username or password is wrong.');user=a.name}
+  enter(user);msg='';draft='';render()}
+ finally{const g=document.getElementById('go');if(g)g.disabled=false}});
 // SPLASH: 5s total. Waves enter (1.5s), stay (2s), exit (1.5s). Not clickable.
 (function(){const sp=document.getElementById('splash'),ENTER=1500,HOLD=2000,EXIT=1500;
- document.getElementById('sc').innerHTML=logo()+'<h1>TUGTOG<br>PILIPINAS</h1>';
- const drain=()=>{sp.className='drain';setTimeout(()=>{sp.hidden=true},EXIT+100)};
+ document.getElementById('sc').innerHTML=logo()+'<h1>TUGTOG<br>PILIPINAS</h1><p>Discover the Music.<br>Explore the Culture.</p>';
+ const drain=()=>{sp.className='drain';document.getElementById('auth').hidden=false;setTimeout(()=>{sp.hidden=true},EXIT)};
  ['w0','w1','w2'].forEach(c=>{let h='';for(let i=0;i<10;i++)h+=`<i class="drop" style="--t:${(Math.random()*96).toFixed(0)}%;--dx:${(30+Math.random()*80).toFixed(0)}px;--dy:${(-70+Math.random()*60).toFixed(0)}px;animation-delay:${(Math.random()*1).toFixed(2)}s"></i>`;sp.querySelector('.'+c).insertAdjacentHTML('beforeend',h)});
  setTimeout(()=>{sp.className='flood'},30);
  setTimeout(()=>{sp.className='flood logo'},800);
  // enter ends ~1530ms (1.3s slide + 0.2s stagger); stay HOLD; exit takes EXIT
- setTimeout(drain,30+ENTER+HOLD)})();
+ setTimeout(drain,ENTER+HOLD)})();
+
+// ===== START =====
+render();
 </script>
 </body>
 </html>
