@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Tugtog Pilipinas</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,600;1,600;1,800;1,900&display=swap">
 <style>
-:root{--navy:#0f2a5f;--sun:#f4b223;--cream:#fcf4de;--red:#ce1126;--blue2:#2f6bff;--disp:"Playfair Display",Georgia,serif;--body:Nunito,system-ui,sans-serif}
+:root{--navy:#0f2a5f;--sun:#f4b223;--cream:#fcf4de;--red:#ce1126;--blue2:#2f6bff;--disp:Poppins,"Segoe UI",system-ui,sans-serif;--body:Nunito,system-ui,sans-serif}
 *{box-sizing:border-box}
 html,body{background:transparent}
 body{margin:0;font:400 16px/1.5 var(--body)}
@@ -40,6 +40,14 @@ p{margin:0}
 .splash-c p{color:#dfe5f3;font-size:.9rem}
 /* tagline from the poster */
 .splash-c p{font:700 1.05rem/1.35 var(--disp);color:#fff}
+/* new theme: halftone navy, heavy italic title with navy outline, badge logo */
+.w2{background:radial-gradient(rgba(255,255,255,.09) 1.3px,transparent 1.8px) 0 0/9px 9px,radial-gradient(circle at 88% 12%,rgba(255,255,255,.17),transparent 24%),radial-gradient(circle at 8% 92%,rgba(61,116,255,.25),transparent 42%),#151e70;color:#151e70}
+.splash-c{gap:6px}
+.splash-c svg{width:150px;height:150px;filter:drop-shadow(0 6px 14px rgba(0,0,0,.45))}
+.splash-c h1{display:grid;justify-items:center;gap:0;margin-top:6px;letter-spacing:0;text-shadow:3px 0 #0a1250,-3px 0 #0a1250,0 3px #0a1250,0 -3px #0a1250,2px 2px #0a1250,-2px -2px #0a1250,2px -2px #0a1250,-2px 2px #0a1250,0 7px 14px rgba(0,0,0,.45)}
+.t1{font:900 italic clamp(3.2rem,17vw,4.6rem)/1 var(--disp);color:#fff}
+.t2{font:800 italic clamp(1.5rem,8vw,2.1rem)/1.1 var(--disp);color:#fff;letter-spacing:.04em}
+.splash-c p{font:600 italic .85rem/1.35 var(--disp);color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.5)}
 @media (prefers-reduced-motion:reduce){#splash *{transition-duration:.01s!important;animation:none!important}}
 </style>
 </head>
@@ -54,15 +62,16 @@ p{margin:0}
 </div>
 
 <script>
-// Sun emblem: 8 groups of rays (red left, blue right) around a play button.
-const logo=()=>{const P=(r,t)=>(50+r*Math.sin(t)).toFixed(1)+' '+(50-r*Math.cos(t)).toFixed(1);
- const ray=(a,len,w)=>{const t=a*Math.PI/180;return `M${P(29,t-w)}L${P(len,t)}L${P(29,t+w)}Z`};
- let red='',blue='';for(let i=0;i<8;i++){const a=i*45,d=ray(a,48,.1)+ray(a-12,41,.065)+ray(a+12,41,.065);if(a>=225||a===0)red+=d;else blue+=d}
- return `<svg viewBox="0 0 100 100" role="img" aria-label="Tugtog Pilipinas logo"><path d="${red}" style="fill:var(--red)"/><path d="${blue}" style="fill:var(--blue2)"/><circle cx="50" cy="50" r="27" style="fill:#0b1346;stroke:var(--sun);stroke-width:2.5"/><path d="M43 37.5V62.5L65 50Z" style="fill:var(--cream);stroke:var(--cream);stroke-width:4;stroke-linejoin:round"/></svg>`};
+// Badge: white ring, navy disc, flag sun with 3 stars, music notes, red and blue swoosh.
+const logo=()=>{const P=(r,t)=>(50+r*Math.sin(t)).toFixed(1)+' '+(44-r*Math.cos(t)).toFixed(1);
+ let rays='';for(let i=0;i<8;i++){const t=i*Math.PI/4,w=.17;rays+=`M${P(14.5,t-w)}L${P(25,t)}L${P(14.5,t+w)}Z`}
+ const star=(x,y,r)=>{let d='';for(let i=0;i<10;i++){const t=i*Math.PI/5,q=i%2?r*.42:r;d+=(i?'L':'M')+(x+q*Math.sin(t)).toFixed(1)+' '+(y-q*Math.cos(t)).toFixed(1)}return d+'Z'};
+ const note=(x,y)=>`<ellipse cx="${x}" cy="${y}" rx="2.3" ry="1.7" transform="rotate(-20 ${x} ${y})"/><path d="M${x+2} ${y-.5}V${y-9}q3.2 1 3.4 5" fill="none" stroke="#fff" stroke-width="1.3"/>`;
+ return `<svg viewBox="0 0 100 100" role="img" aria-label="Tugtog Pilipinas logo"><circle cx="50" cy="50" r="48" fill="#fff"/><circle cx="50" cy="50" r="43" fill="#121a66"/><path d="M7.8 58A43 43 0 0 0 92.2 58Q50 84 7.8 58Z" fill="#2f6bff"/><path d="M10.1 66A43 43 0 0 0 89.9 66Q50 78 10.1 66Z" fill="#ce1126"/><g fill="#f5c518"><circle cx="50" cy="44" r="12.5"/><path d="${rays}"/><path d="${star(25,30,5)}"/><path d="${star(75,30,5)}"/><path d="${star(50,76,4.5)}"/></g><g fill="#fff">${note(36,22)}${note(58,18)}</g></svg>`};
 
 // SPLASH: 5s total. Waves enter (1.5s), stay (2s), exit (1.5s). Not clickable.
 (function(){const sp=document.getElementById('splash'),ENTER=1500,HOLD=2000,EXIT=1500;
- document.getElementById('sc').innerHTML=logo()+'<h1>TUGTOG<br>PILIPINAS</h1><p>Discover the Music.<br>Explore the Culture.</p>';
+ document.getElementById('sc').innerHTML=logo()+'<h1><span class="t1">TUGTOG</span><span class="t2">PILIPINAS</span></h1><p>Discover the Music. Explore the Culture.</p>';
  const drain=()=>{sp.className='drain';setTimeout(()=>{sp.hidden=true;try{window.AppInventor.setWebViewString('splash-done')}catch(e){}},EXIT)};
  ['w0','w1','w2'].forEach(c=>{let h='';for(let i=0;i<10;i++)h+=`<i class="drop" style="--t:${(Math.random()*96).toFixed(0)}%;--dx:${(30+Math.random()*80).toFixed(0)}px;--dy:${(-70+Math.random()*60).toFixed(0)}px;animation-delay:${(Math.random()*1).toFixed(2)}s"></i>`;sp.querySelector('.'+c).insertAdjacentHTML('beforeend',h)});
  setTimeout(()=>{sp.className='flood'},30);
